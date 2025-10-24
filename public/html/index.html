@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Chat</title>
+  <link rel="stylesheet" href="/public/css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <div id="currentUser" class="current-user"></div>
+      <h2>Online korisnici</h2>
+      <ul id="userList"></ul>
+    </aside>
+
+    <main class="chat">
+      <div id="chatWindow" class="messages"></div>
+      <div class="input-area">
+        <input type="text" id="messageInput" placeholder="Unesi poruku..." />
+        <button id="sendBtn">Pošalji</button>
+      </div>
+    </main>
+  </div>
+
+  <div id="notification" class="notification hidden"></div>
+
+  <script src="/public/js/app.js"></script>
+</body>
+</html>

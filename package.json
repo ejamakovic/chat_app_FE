@@ -1,0 +1,25 @@
+{
+  "name": "chatapp",
+  "version": "1.0.0",
+  "description": "Simple global and private chat using Node.js and WebSocket",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-session": "^1.18.2",
+    "uuid": "^13.0.0",
+    "ws": "^8.18.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ejamakovic/chat_app_FE.git"
+  },
+  "author": "ejamakovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ejamakovic/chat_app_FE/issues"
+  },
+  "homepage": "https://github.com/ejamakovic/chat_app_FE#readme"
+}
