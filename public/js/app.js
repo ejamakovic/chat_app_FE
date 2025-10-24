@@ -43,7 +43,6 @@ async function fetchUsers() {
   }
 }
 
-// Dohvati sve poruke
 async function fetchGlobalChat() {
   try {
     const res = await fetch('/globalChat');
@@ -59,7 +58,7 @@ function showMessage(msg) {
   const div = document.createElement('div');
   div.classList.add('message');
   const date = new Date(msg.timestamp);
-  div.innerHTML = `<strong>${msg.sender}</strong> [${date.toLocaleString()}]: ${msg.content}`;
+  div.innerHTML = `<strong>${msg.sender.username}</strong> [${date.toLocaleString()}]: ${msg.content}`;
   chatWindow.appendChild(div);    
 }
 
@@ -68,7 +67,7 @@ function showMessage(msg) {
 function showNotification(text) {
   notification.textContent = text;
   notification.classList.remove('hidden');
-  setTimeout(() => notification.classList.add('hidden'), 3000);
+  setTimeout(() => notification.classList.add('hidden'), 5000);
 }
 
 // WebSocket konekcija direktno na Spring
@@ -78,12 +77,13 @@ function connect() {
   socket.onopen = () => console.log('Povezan na Spring WebSocket server');
 
   socket.onmessage = (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.type === 'chat') {
+    const msg = JSON.parse(event.data);    
+  
+    if (msg.type === 'chat')
       showMessage(msg);
-    } else if (msg.type === 'user') {
-      addUserToList(msg.username);
-      showNotification(`${msg.username} se pridružio!`);
+    else if (msg.type === 'user') {
+      addUserToList(msg.user.username);
+      showNotification(`${msg.user.username} se pridružio!`);
     }
   };
 
@@ -108,6 +108,6 @@ messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMes
   await getCurrentUser();
   await fetchUsers();
   await fetchGlobalChat();
-  setInterval(fetchUsers, 60000);
+  setInterval(fetchUsers, 30000);
   connect();
 })();
