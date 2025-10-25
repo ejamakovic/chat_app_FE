@@ -6,6 +6,7 @@ const notification = document.getElementById('notification');
 const currentUserDiv = document.getElementById('currentUser');
 
 let username;
+let activeReceiver = null;
 let socket;
 
 // Dohvati username iz sesije FE servera
@@ -91,12 +92,28 @@ function connect() {
   socket.onerror = (err) => console.error(err);
 }
 
-// Slanje poruke
-function sendMessage() {
+async function sendMessage() {
   const text = messageInput.value.trim();
-  if (!text || !socket) return;
-  socket.send(JSON.stringify({ type: 'chat', content: text }));
+  if (!text) return;
+
+  const body = {
+    sender: { username: username },
+    receiver: activeReceiver ? { username: activeReceiver } : null,
+    content: text
+  };  
   messageInput.value = '';
+  try {
+    const res = await fetch('/sendMessage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) throw new Error('Greška pri slanju poruke');
+    messageInput.value = '';
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Event listeneri
@@ -108,6 +125,6 @@ messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMes
   await getCurrentUser();
   await fetchUsers();
   await fetchGlobalChat();
-  setInterval(fetchUsers, 30000);
+  setInterval(fetchUsers, 60000);
   connect();
 })();

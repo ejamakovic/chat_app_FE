@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const { ok } = require('assert');
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.get('/session', (req, res) => {
 // Dohvati sve korisnike sa Spring backenda
 app.get('/users', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:8080/users'); // Spring endpoint
+    const response = await fetch('http://localhost:8080/users/connected');
     const users = await response.json();
     res.json(users);
   } catch (err) {
@@ -48,11 +49,48 @@ app.get("/globalChat", async (req, res) => {
 });
 
 // Početna ruta
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (!req.session.username) {
     req.session.username = `USER_${Date.now()}`;
-  }
+    try {
+      const response = await fetch('http://localhost:8080/users/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({username: req.session.username})
+      });
+
+      if (!response.ok) {
+        return res.status(response.status).json({ error: 'Backend error' });
+      }
+    }
+    catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Greška prilikom dodavanja korisnika' });
+    }
+  } 
   res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
 });
+
+app.post('/sendMessage', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:8080/messages/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Backend error' });
+    }
+    
+    return res.status(200).json({ message: 'Poruka uspješno poslana' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Greška prilikom slanja poruke' });
+  }
+});
+
+
 
 app.listen(3000, () => console.log('FE server radi na portu 3000'));
