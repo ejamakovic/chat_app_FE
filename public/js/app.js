@@ -120,6 +120,16 @@ async function sendMessage() {
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
+
+window.addEventListener('beforeunload', async (e) => {
+  try {
+    await fetch('/logoutUser', { method: 'POST' });
+  } catch (err) {
+    console.error('Ne mogu javiti da je user offline', err);
+  }
+});
+
+
 // Inicijalizacija
 (async () => {
   await getCurrentUser();

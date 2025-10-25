@@ -91,6 +91,28 @@ app.post('/sendMessage', async (req, res) => {
   }
 });
 
+app.post('/logoutUser', async (req, res) => {
+  try {    
+    const username = req.session.username;
+    if (!username) return res.sendStatus(400);
+    
+    await fetch('http://localhost:8080/users/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: username})
+    });
+
+    req.session.destroy(err => {
+      if (err) console.error(err);
+    });
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Greška prilikom odjave' });
+  }
+});
+
 
 
 app.listen(3000, () => console.log('FE server radi na portu 3000'));
