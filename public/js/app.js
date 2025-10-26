@@ -9,6 +9,9 @@ let username;
 let activeReceiver = null;
 let socket;
 
+// Bazni URL backend-a (iz environment varijable ili fallback na localhost)
+const BACKEND_URL = window.BACKEND_URL || 'http://localhost:8080';
+
 // Dohvati username iz sesije FE servera
 async function getCurrentUser() {
   try {
@@ -73,7 +76,7 @@ function showNotification(text) {
 
 // WebSocket konekcija direktno na Spring
 function connect() {
-  socket = new WebSocket("ws://localhost:8080/ws/chat");
+  socket = new WebSocket(`${BACKEND_URL.replace(/^http/, 'ws')}/ws/chat`);
 
   socket.onopen = () => console.log('Povezan na Spring WebSocket server');
 

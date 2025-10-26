@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
-const { ok } = require('assert');
 
 const app = express();
 
@@ -24,10 +23,12 @@ app.get('/session', (req, res) => {
   res.json({ username: req.session.username });
 });
 
-// Dohvati sve korisnike sa Spring backenda
+// Definiši bazni URL za backend
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8080';
+
 app.get('/users', async (req, res) => {
   try {
-    const response = await fetch('http://localhost:8080/users/connected');
+    const response = await fetch(`${BACKEND_URL}/users/connected`);
     const users = await response.json();
     res.json(users);
   } catch (err) {
@@ -36,10 +37,9 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Dohvati sve poruke sa Spring backenda
 app.get("/globalChat", async (req, res) => {
   try {
-    const response = await fetch('http://localhost:8080/messages'); // Spring endpoint
+    const response = await fetch(`${BACKEND_URL}/messages`);
     const messages = await response.json();
     res.json(messages);
   } catch (err) {
@@ -48,33 +48,30 @@ app.get("/globalChat", async (req, res) => {
   }
 });
 
-// Početna ruta
 app.get('/', async (req, res) => {
   if (!req.session.username) {
     req.session.username = `USER_${Date.now()}`;
     try {
-      const response = await fetch('http://localhost:8080/users/create', {
+      const response = await fetch(`${BACKEND_URL}/users/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({username: req.session.username})
+        body: JSON.stringify({ username: req.session.username })
       });
 
       if (!response.ok) {
         return res.status(response.status).json({ error: 'Backend error' });
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Greška prilikom dodavanja korisnika' });
     }
-  } 
+  }
   res.sendFile(path.join(__dirname, 'public', 'html', 'index.html'));
 });
 
 app.post('/sendMessage', async (req, res) => {
-  try {    
-    
-    const response = await fetch('http://localhost:8080/messages/create', {
+  try {
+    const response = await fetch(`${BACKEND_URL}/messages/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body)
@@ -93,16 +90,15 @@ app.post('/sendMessage', async (req, res) => {
   }
 });
 
-
 app.post('/logoutUser', async (req, res) => {
-  try {    
+  try {
     const username = req.session.username;
     if (!username) return res.sendStatus(400);
-    
-    await fetch('http://localhost:8080/users/logout', {
+
+    await fetch(`${BACKEND_URL}/users/logout`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: username})
+      body: JSON.stringify({ username: username })
     });
 
     req.session.destroy(err => {
@@ -115,7 +111,5 @@ app.post('/logoutUser', async (req, res) => {
     res.status(500).json({ error: 'Greška prilikom odjave' });
   }
 });
-
-
 
 app.listen(3000, () => console.log('FE server radi na portu 3000'));
