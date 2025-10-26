@@ -72,7 +72,8 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/sendMessage', async (req, res) => {
-  try {
+  try {    
+    
     const response = await fetch('http://localhost:8080/messages/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -80,16 +81,18 @@ app.post('/sendMessage', async (req, res) => {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: 'Backend error' });
+      const text = await response.text();
+      console.error('Backend error:', text);
+      return res.status(response.status).json({ error: text });
     }
-    
-    return res.status(200).json({ message: 'Poruka uspješno poslana' });
 
+    res.status(200).json({ message: 'Poruka uspješno poslana' });
   } catch (err) {
-    console.error(err);
+    console.error('Greška prilikom prosljeđivanja poruke:', err);
     res.status(500).json({ error: 'Greška prilikom slanja poruke' });
   }
 });
+
 
 app.post('/logoutUser', async (req, res) => {
   try {    
