@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Global Chat</title>
+  <title>Chat App</title>
   <link rel="stylesheet" href="/public/css/style.css" />
 </head>
 <body>
   <div class="container">
     <aside class="sidebar">
       <div id="currentUser" class="current-user"></div>
-      <h2>Online korisnici</h2>
-      <ul id="userList"></ul>
+      <div class="user-list-container">
+        <h2>Online korisnici</h2>
+        <ul id="userList"></ul>
+      </div>
+      <button id="globalChatBtn" class="global-btn">Global Chat</button>
     </aside>
 
     <main class="chat">
@@ -24,6 +27,17 @@
   </div>
 
   <div id="notification" class="notification hidden"></div>
+
+  <!-- Modal za privatni chat -->
+  <div id="userModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modalUsername"></h3>
+      <div class="modal-actions">
+        <button id="startChatBtn">Otvori chat</button>
+        <button id="closeModalBtn">Zatvori</button>
+      </div>
+    </div>
+  </div>
 
   <script src="/public/js/app.js"></script>
 </body>

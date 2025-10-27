@@ -39,12 +39,24 @@ app.get('/users', async (req, res) => {
 
 app.get("/globalChat", async (req, res) => {
   try {
-    const response = await fetch(`${BACKEND_URL}/messages`);
+    const response = await fetch(`${BACKEND_URL}/messages/global`);
     const messages = await response.json();
     res.json(messages);
   } catch (err) {
     console.error('Greška pri dohvatu poruka:', err);
     res.status(500).json({ error: 'Ne mogu dohvatiti poruke' });
+  }
+});
+
+app.get("/privateChat", async (req, res) => {
+  try {
+    const { sender, receiver } = req.query;
+    const response = await fetch(`${BACKEND_URL}/messages/private?sender=${sender}&receiver=${receiver}`);
+    const messages = await response.json();
+    res.json(messages);
+  } catch (err) {
+    console.error('Greška pri dohvatu privatnih poruka:', err);
+    res.status(500).json({ error: 'Greška prilikom dohvata privatnih poruka' });
   }
 });
 
