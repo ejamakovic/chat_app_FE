@@ -60,6 +60,23 @@ app.get("/privateChat", async (req, res) => {
   }
 });
 
+app.post("/privateChatRequest", async (req, res) => {
+  try {
+    const { sender, receiver } = req.body; // koristi body umjesto query
+    const response = await fetch(`${BACKEND_URL}/messages/private/start`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sender, receiver }) // šalje body na backend
+    });
+    const messages = await response.json();
+    res.json(messages);
+  } catch (err) {
+    console.error('Greška pri slanju zahtjeva za private chat:', err);
+    res.status(500).json({ error: 'Greška pri slanju zahtjeva za private chat' });
+  }
+});
+
+
 app.get('/', async (req, res) => {
   if (!req.session.username) {
     req.session.username = `USER_${Date.now()}`;

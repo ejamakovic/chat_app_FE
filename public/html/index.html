@@ -10,13 +10,17 @@
   <div class="container">
     <aside class="sidebar">
       <div id="currentUser" class="current-user"></div>
+      <button id="globalChatBtn" class="global-btn">Global Chat</button>
+      <button id="notificationsBtn" class="notif-btn">Obavijesti</button>
+      <div id="notificationsPanel" class="notifications-panel hidden">
+        <h3>Obavijesti</h3>
+        <ul id="notificationsList"></ul>
+      </div>
       <div class="user-list-container">
         <h2>Online korisnici</h2>
         <ul id="userList"></ul>
       </div>
-      <button id="globalChatBtn" class="global-btn">Global Chat</button>
     </aside>
-
     <main class="chat">
       <div id="chatWindow" class="messages"></div>
       <div class="input-area">
@@ -27,8 +31,7 @@
   </div>
 
   <div id="notification" class="notification hidden"></div>
-
-  <!-- Modal za privatni chat -->
+  
   <div id="userModal" class="modal hidden">
     <div class="modal-content">
       <h3 id="modalUsername"></h3>

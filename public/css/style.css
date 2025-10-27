@@ -22,6 +22,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  height: 100vh; /* ✅ sidebar ide cijelom visinom ekrana */
+  box-sizing: border-box;
 }
 
 .current-user {
@@ -43,6 +45,56 @@ body {
 
 .global-btn:hover {
   background: #059669;
+}
+
+/* ✅ Lista korisnika sa scrollom ako je preduga */
+.user-list-container {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border-radius: 6px;
+  padding: 0.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px); /* računa se prostor za gore navedene elemente */
+}
+
+/* ✅ opcionalno: stilizovan scrollbar */
+.user-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.user-list-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.user-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.user-list-container h2 {
+  font-size: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.user-list-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-list-container li {
+  background: rgba(255,255,255,0.1);
+  margin-bottom: 0.4rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.user-list-container li:hover {
+  background: rgba(255,255,255,0.25);
 }
 
 .chat {
@@ -179,4 +231,67 @@ body {
   border-radius: 6px;
   border: none;
   cursor: pointer;
+}
+
+
+/* ✅ Dugme za obavijesti */
+.notif-btn {
+  padding: 0.5rem;
+  background: #f59e0b;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.notif-btn:hover {
+  background: #d97706;
+}
+
+.notifications-panel {
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 0.5rem;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.notifications-panel h3 {
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.notifications-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notifications-panel li {
+  background: rgba(255,255,255,0.15);
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.notifications-panel li button {
+  background: #10b981;
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.notifications-panel li button.decline {
+  background: #ef4444;
+}
+
+.notifications-panel li button:hover {
+  opacity: 0.85;
 }
