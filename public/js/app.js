@@ -47,7 +47,7 @@ async function sendPrivateChatRequest(receiverUsername) {
 
     if (messages.ok) {
       showNotification(`Zahtjev za chat poslan korisniku ${receiverUsername}`);
-      displayChat(messages);
+      loadPrivateChat(receiverUsername);
     } else {
       showNotification('Greška pri slanju zahtjeva');
     }
@@ -141,8 +141,11 @@ async function connect() {
     }
     else if (msg.type === 'private') 
       showMessage(msg);
-    else if (msg.type === 'chatRequest') 
+    else if (msg.type === 'chatRequest') {
       addNotification(`Korisnik ${msg.sender} želi započeti privatni chat.`, msg.sender);
+      showNotification(`Korisnik ${msg.sender} želi započeti privatni chat.`); 
+    }
+      
   };
 
   socket.onclose = () => console.log('Veza zatvorena');
@@ -164,7 +167,7 @@ async function sendMessage() {
 }
 
 async function loadPrivateChat(user) {
-  activeReceiver = user;
+  setActiveReceiver(user);
   try {
     const res = await fetch(`/privateChat?sender=${username}&receiver=${user}`);
     const messages = await res.json();
@@ -179,11 +182,6 @@ messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMes
 window.addEventListener('beforeunload', async () => {
   try { await fetch('/logoutUser')}
   catch (err) { console.error('Ne mogu javiti da je user offline', err); }
-});
-
-document.getElementById('globalChatBtn').addEventListener('click', async () => {
-  activeReceiver = null;
-  await fetchGlobalChat();
 });
 
 const notificationsBtn = document.getElementById('notificationsBtn');
@@ -224,13 +222,11 @@ function addNotification(text, sender = null) {
   notificationsList.appendChild(li);
 }
 
-
-
 async function acceptChatRequest(sender) {
   try {
     const res = await fetch(`/privateChat?sender=${sender}&receiver=${username}`);
     const messages = await res.json();
-    activeReceiver = sender;
+    setActiveReceiver(sender);
     displayChat(messages);
     showNotification(`Privatni chat s korisnikom ${sender} otvoren.`);
   } catch (err) {
@@ -244,6 +240,27 @@ function displayChat(messages){
     scrollToLastMessage(true);
 }
 
+function updateChatHeader() {
+  const chatHeader = document.getElementById('chatHeader');
+  if (activeReceiver === null) {
+    chatHeader.textContent = "Global Chat";
+  } else {
+    chatHeader.textContent = `Chat sa: ${activeReceiver}`;
+  }
+}
+
+function setActiveReceiver(username) {
+  activeReceiver = username;
+  updateChatHeader();
+}
+
+document.getElementById('globalChatBtn').addEventListener('click', async () => {
+  activeReceiver = null;
+  updateChatHeader();
+  await fetchGlobalChat();
+});
+
+updateChatHeader();
 
 (async () => {
   await getCurrentUser();

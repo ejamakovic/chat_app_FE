@@ -295,3 +295,16 @@ body {
 .notifications-panel li button:hover {
   opacity: 0.85;
 }
+
+.chat-header {
+  background-color: #3b82f6; /* plava traka */
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 12px;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
