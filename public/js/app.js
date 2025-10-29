@@ -253,6 +253,10 @@ document.getElementById('globalChatBtn').addEventListener('click', async () => {
 
 updateChatHeader();
 
+window.addEventListener('beforeunload', (event) => {   
+  navigator.sendBeacon('/logoutUser', JSON.stringify(username));
+});
+
 (async () => {
   await getCurrentUser();
   await fetchUsers();
