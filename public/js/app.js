@@ -5,20 +5,7 @@ const userList = document.getElementById('userList');
 const notification = document.getElementById('notification');
 const currentUserDiv = document.getElementById('currentUser');
 
-const userModal = document.createElement('div');
-userModal.id = 'userModal';
-userModal.className = 'modal hidden';
-userModal.innerHTML = `
-  <div class="modal-content">
-    <h3 id="modalUsername"></h3>
-    <div class="modal-actions">
-      <button id="startChatBtn">Otvori chat</button>
-      <button id="closeModalBtn">Zatvori</button>
-    </div>
-  </div>
-`;
-document.body.appendChild(userModal);
-
+const userModal = document.getElementById('userModal');
 const modalUsername = userModal.querySelector('#modalUsername');
 const startChatBtn = userModal.querySelector('#startChatBtn');
 const closeModalBtn = userModal.querySelector('#closeModalBtn');
@@ -255,8 +242,7 @@ function setActiveReceiver(username) {
 }
 
 document.getElementById('globalChatBtn').addEventListener('click', async () => {
-  activeReceiver = null;
-  updateChatHeader();
+  setActiveReceiver(null);
   await fetchGlobalChat();
 });
 
