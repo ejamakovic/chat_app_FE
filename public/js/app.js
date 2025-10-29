@@ -120,14 +120,19 @@ async function connect() {
 
   socket.onmessage = (event) => {
     const msg = JSON.parse(event.data);
-    if (msg.type === 'chat') showMessage(msg);
+    if (msg.type === 'chat') {
+      if(activeReceiver == null)
+        showMessage(msg);
+    }
     else if (msg.type === 'user') {
       addUserToList(msg.user.username);
       addNotification(`${msg.user.username} se pridružio chatu.`);
       showNotification(`${msg.user.username} se pridružio!`); 
     }
-    else if (msg.type === 'private') 
-      showMessage(msg);
+    else if (msg.type === 'private') {
+      if(activeReceiver != null)
+        showMessage(msg);
+    }
     else if (msg.type === 'chatRequest') {
       addNotification(`Korisnik ${msg.sender} želi započeti privatni chat.`, msg.sender);
       showNotification(`Korisnik ${msg.sender} želi započeti privatni chat.`); 
