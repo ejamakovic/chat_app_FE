@@ -15,10 +15,9 @@ app.use(sessionParser);
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
-// Dohvati username iz sesije
 app.get('/session', (req, res) => {
   if (!req.session.username) {
-    req.session.username = `USER_${Date.now()}`;
+    return res.status(400).json({ error: 'Korisnik nije prijavljen' });
   }
   res.json({ username: req.session.username });
 });
@@ -76,10 +75,10 @@ app.post("/privateChatRequest", async (req, res) => {
   }
 });
 
-
 app.get('/', async (req, res) => {
   if (!req.session.username) {
     req.session.username = `USER_${Date.now()}`;
+
     try {
       const response = await fetch(`${BACKEND_URL}/users/create`, {
         method: 'POST',

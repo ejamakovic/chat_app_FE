@@ -308,3 +308,16 @@ body {
   margin-bottom: 10px;
   letter-spacing: 0.5px;
 }
+
+.logout-btn {
+  padding: 0.5rem;
+  background: #ef4444;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}

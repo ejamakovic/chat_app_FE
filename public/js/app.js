@@ -171,10 +171,6 @@ async function loadPrivateChat(user) {
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-window.addEventListener('beforeunload', async () => {
-  try { await fetch('/logoutUser')}
-  catch (err) { console.error('Ne mogu javiti da je user offline', err); }
-});
 
 const notificationsBtn = document.getElementById('notificationsBtn');
 const notificationsPanel = document.getElementById('notificationsPanel');
@@ -253,9 +249,23 @@ document.getElementById('globalChatBtn').addEventListener('click', async () => {
 
 updateChatHeader();
 
-window.addEventListener('beforeunload', (event) => {   
-  navigator.sendBeacon('/logoutUser', JSON.stringify(username));
+const logoutBtn = document.getElementById('logoutBtn');
+
+logoutBtn.addEventListener('click', async () => {
+  try {
+    const res = await fetch('/logoutUser', { method: 'POST' });
+    if (res.ok) {      
+      username = null;
+      currentUserDiv.textContent = '';    
+      window.location.reload();
+    } else {
+      console.error('Greška pri odjavi');
+    }
+  } catch (err) {
+    console.error('Greška pri odjavi', err);
+  }
 });
+
 
 (async () => {
   await getCurrentUser();
